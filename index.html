@@ -1,0 +1,122 @@
+<!--
+Download https://skel.wjsams.com/cdn.zip and unzip to use this skeleton locally.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>BodyRock Timer</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link type="text/css" rel="stylesheet" href="cdn/js/bootstrap/3.0.0/css/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="cdn/css/siamnet/default.css" />
+    </head>
+    <body>
+        <br />
+        <div class="container">
+            <article class="container">
+                <div class="container">
+                    <input class="btn btn-success" type="button" id="startTimer3010" value="30/10" />
+                    <input class="btn btn-success" type="button" id="startTimer5010" value="50/10" />
+                </div>
+                <div id="clock" class="container">
+                </div>
+            </article>
+        </div>
+        <script src="cdn/js/jquery/1.10.2/jquery-1.10.2.min.js"></script>
+        <script src="cdn/js/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="cdn/js/siamnet/default.js"></script>
+        <script type="text/javascript">
+            function random(min, max) {
+                return Math.round(Math.random() * (max - min) + min);
+            }
+
+            // player timeout
+            p = null;
+            // clock timeout
+            t = null;
+            i = null;
+            go = 30;
+            rest = 10;
+            start = false;
+            on = null;
+
+            // 30/10
+            function playerGo() {
+                i = go;
+                clearTimeout(t);
+                clock();
+                var beep = new Audio("beep.wav");
+                beep.play();
+                p = setTimeout("playerRest()", go*1000);
+            }
+
+            function playerRest() {
+                i = rest;
+                clearTimeout(t);
+                clock();
+                var beep = new Audio("beep.wav");
+                beep.play();
+                p = setTimeout("playerGo()", rest*1000);
+            }
+
+            function clock() {
+                $("#clock").text(i);
+                i = i - 1;
+                t = setTimeout("clock()", 1000);
+            }
+
+            function toggleButton(e) {
+                if ($(e).hasClass("btn-danger")) {
+                    $(e).removeClass("btn-danger").addClass("btn-success");
+                } else {
+                    $(e).removeClass("btn-success").addClass("btn-danger");
+                }
+            }
+
+            function offButton(id) {
+                if (id != on) {
+                    start = false;
+                }
+                $("#" + id).removeClass("btn-danger").addClass("btn-success");
+                on = id;
+            }
+
+            $(document).ready(function() {
+                $("#startTimer3010").on("click", function() {
+                    clearTimeout(t);
+                    clearTimeout(p);
+                    offButton("startTimer5010");
+                    if (start) {
+                        toggleButton(this);
+                        $("#clock").text('');
+                        start = false;
+                        return;
+                    } else {
+                        toggleButton(this);
+                    }
+                    go = 30;
+                    rest = 10;
+                    playerGo();
+                    start = true;
+                });
+                $("#startTimer5010").on("click", function() {
+                    clearTimeout(t);
+                    clearTimeout(p);
+                    offButton("startTimer3010");
+                    if (start) {
+                        toggleButton(this);
+                        $("#clock").text('');
+                        start = false;
+                        return;
+                    } else {
+                        toggleButton(this);
+                    }
+                    go = 50;
+                    rest = 10;
+                    playerGo();
+                    start = true;
+                });
+            });
+        </script>
+    </body>
+</html>
